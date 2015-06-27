@@ -17,19 +17,10 @@ int main(int argc, char** argv) {
         printf("Error: %d\n", errno);
         return 1;
     }
-    
-
-    int len;
-    unsigned char* buffer;
-    
-    len = awoxl_protocol_on(&buffer);
-    awoxl_send_command(sock, buffer, len);
-    free(buffer);
 
     srand(time(NULL));
-    len = awoxl_protocol_rgb(&buffer, rand() % 255, rand() % 255, rand() % 255);
-    awoxl_send_command(sock, buffer, len);
-    free(buffer);
+    awoxl_on(sock);
+    awoxl_rgb(sock, rand() % 255, rand() % 255, rand() % 255);
     
     awoxl_disconnect(sock);
 }

@@ -1,4 +1,5 @@
 #include "awoxl_client.h"
+#include "awoxl_protocol.h"
 
 #include <bluetooth/l2cap.h>
 #include <errno.h>
@@ -73,6 +74,10 @@ int awoxl_connect(bdaddr_t dst) {
     return sock;
 }
 
+int awoxl_disconnect(int sock) {
+    return close(sock);
+}
+
 int awoxl_send_command(int sock, unsigned char* command, int len) {
     unsigned char* buffer = (unsigned char*) malloc(len + 3);
     buffer[0] = 0x12;
@@ -84,7 +89,37 @@ int awoxl_send_command(int sock, unsigned char* command, int len) {
     return sent == len + 3 ? 0 : -1;
 }
 
-int awoxl_disconnect(int sock) {
-    return close(sock);
+int awoxl_on(int sock) {
+    int len;
+    unsigned char* buffer;
+    
+    len = awoxl_protocol_on(&buffer);
+    int err = awoxl_send_command(sock, buffer, len);
+    free(buffer);
+    return err;
+}
+
+int awoxl_off(int sock) {
+    int len;
+    unsigned char* buffer;
+    
+    len = awoxl_protocol_off(&buffer);
+    int err = awoxl_send_command(sock, buffer, len);
+    free(buffer);
+    return err;
+}
+
+int awoxl_onoff(int sock, int on) {
+    return on ? awoxl_on(sock) : awoxl_off(sock);
+}
+
+int awoxl_rgb(int sock, unsigned char r, unsigned char g, unsigned char b) {
+    int len;
+    unsigned char* buffer;
+    
+    len = awoxl_protocol_rgb(&buffer, r, g, b);
+    int err = awoxl_send_command(sock, buffer, len);
+    free(buffer);
+    return err;
 }
 
