@@ -113,6 +113,26 @@ int awoxl_onoff(int sock, int on) {
     return on ? awoxl_on(sock) : awoxl_off(sock);
 }
 
+int awoxl_brightness(int sock, unsigned char brightness) {
+    int len;
+    unsigned char* buffer;
+    
+    len = awoxl_protocol_brightness(&buffer, brightness);
+    int err = awoxl_send_command(sock, buffer, len);
+    free(buffer);
+    return err;
+}
+
+int awoxl_white(int sock, unsigned char temperature) {
+    int len;
+    unsigned char* buffer;
+    
+    len = awoxl_protocol_white(&buffer, temperature);
+    int err = awoxl_send_command(sock, buffer, len);
+    free(buffer);
+    return err;
+}
+
 int awoxl_rgb(int sock, unsigned char r, unsigned char g, unsigned char b) {
     int len;
     unsigned char* buffer;

@@ -11,6 +11,8 @@ int awoxl_send_command(int sock, unsigned char* buffer, int len);
 int awoxl_on(int sock);
 int awoxl_off(int sock);
 int awoxl_onoff(int sock, int on);
+int awoxl_brightness(int sock, unsigned char brightness);
+int awoxl_white(int sock, unsigned char temperature);
 int awoxl_rgb(int sock, unsigned char r, unsigned char g, unsigned char b);
 
 #endif /* AWOXL_CLIENT_H_ */
