@@ -45,6 +45,8 @@ void parse_rgb(char** args, int args_count,
 }
 
 int main(int argc, char** argv) {
+    srand(time(NULL));
+
     // TODO: ~/.awoxlrc file
     char* mac = "d0:39:72:b8:35:fd";
     char* command = NULL;
@@ -135,7 +137,7 @@ int main(int argc, char** argv) {
         // printf("off\n");
     } else if (c == 3) {
         awoxl_brightness(sock, value);
-        printf("brightness %d\n", value);
+        //printf("brightness %d\n", value);
     } else if (c == 4) {
         awoxl_white(sock, value);
         // printf("white %d\n", value);
