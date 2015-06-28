@@ -14,7 +14,7 @@ static const char* COMMAND_USAGE =
     "- off\n"
     "- brightness (increase|decrease|2-11)\n"
     "- white (increase|decrease|2-11)\n"
-    "- rgb (0-255),(0-255),(0-255)\n";
+    "- rgb (random|(0-255),(0-255),(0-255))\n";
 
 void parse_brightness_white(char** args, int args_count, int* value,
         int increase, int decrease) {
@@ -34,7 +34,11 @@ void parse_rgb(char** args, int args_count,
         unsigned char* r, unsigned char* g, unsigned char* b) {
     char* arg = args_count >= 1 ? args[0] : "";
     int rr, gg, bb;
-    if (sscanf(arg, "%d,%d,%d", &rr, &gg, &bb) != 3) {
+    if (strcmp(arg, "random") == 0) {
+        rr = rand() % 255;
+        gg = rand() % 255;
+        bb = rand() % 255;
+    } else if (sscanf(arg, "%d,%d,%d", &rr, &gg, &bb) != 3) {
         fprintf(stderr, "Error: Invalid command usage!\n");
         fprintf(stderr, COMMAND_USAGE);
         exit(1);
