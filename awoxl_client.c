@@ -124,11 +124,21 @@ int awoxl_brightness(int sock, unsigned char brightness) {
 }
 
 int awoxl_white(int sock, unsigned char temperature) {
+    int err;
     int len;
     unsigned char* buffer;
-    
+
+    // TODO maybe we can even customize the white light a bit more?    
+    len = awoxl_protocol_rgb(&buffer, 0xFF, 0xDE, 0x00, 1);
+    err = awoxl_send_command(sock, buffer, len);
+    free(buffer);
+    if (err != 0)
+        return err;
+    // TODO have to wait a little bit, maybe even less delay is possible?
+    usleep(50*1000);
+
     len = awoxl_protocol_white(&buffer, temperature);
-    int err = awoxl_send_command(sock, buffer, len);
+    err = awoxl_send_command(sock, buffer, len);
     free(buffer);
     return err;
 }
@@ -137,7 +147,7 @@ int awoxl_rgb(int sock, unsigned char r, unsigned char g, unsigned char b) {
     int len;
     unsigned char* buffer;
     
-    len = awoxl_protocol_rgb(&buffer, r, g, b);
+    len = awoxl_protocol_rgb(&buffer, r, g, b, 0);
     int err = awoxl_send_command(sock, buffer, len);
     free(buffer);
     return err;

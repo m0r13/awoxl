@@ -49,9 +49,10 @@ unsigned int awoxl_protocol_white(unsigned char** buffer,
 }
 
 unsigned int awoxl_protocol_rgb(unsigned char** buffer,
-        unsigned char r, unsigned char g, unsigned char b) {
+        unsigned char r, unsigned char g, unsigned char b, int special) {
     *buffer = (unsigned char*) malloc(17);
     memcpy(*buffer, SEQUENCE_RGB, 17);
+    (*buffer)[8] = special ? 0x02 : 0x01;
     (*buffer)[9] = r;
     (*buffer)[10] = g;
     (*buffer)[11] = b;
