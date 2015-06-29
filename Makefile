@@ -1,9 +1,10 @@
-OBJECTS = awoxl.o awoxl_client.o awoxl_protocol.o awoxl_util.o
+OBJECTS = awoxl_client.o awoxl_protocol.o awoxl_util.o
 CFLAGS = -g
 
-all: awoxl
-awoxl: ${OBJECTS}
+all: awoxl fun/test
+awoxl: awoxl.o ${OBJECTS}
+fun/test: fun/test.o ${OBJECTS}
 
 clean:
-	rm ${OBJECTS}
+	rm awoxl awoxl.o fun/test fun/test.o ${OBJECTS}
 
