@@ -38,8 +38,7 @@ void parse_brightness_white(char** args, int args_count, int* value,
 int main(int argc, char** argv) {
     srand(time(NULL));
 
-    // TODO: ~/.awoxlrc file
-    char* mac = "d0:39:72:b8:35:fd";
+    char* mac = NULL;
     char* command = NULL;
     char** arguments = NULL;
     int arguments_count = 0;
@@ -66,15 +65,11 @@ int main(int argc, char** argv) {
     }
     
     bdaddr_t dst;
-    unsigned int m[6];
-    int scanned = 0;
-    if (mac != NULL)
-        scanned = sscanf(mac, "%02x:%02x:%02x:%02x:%02x:%02x",
-                &m[5], &m[4], &m[3], &m[2], &m[1], &m[0]);
-    for (int i = 0; i < 6; i++)
-        dst.b[i] = m[i];
-    if (scanned != 6) {
+    if (mac != NULL && parse_mac(mac, &dst) != 0) {
         fprintf(stderr, "Error: -b option: You have to specify a valid mac adress!\n");
+        return 1;
+    } else if (read_default_mac(&dst) != 0) {
+        fprintf(stderr, "Error: Unable to read valid mac adress from ~/.awoxlrc file!\n");
         return 1;
     }
 
