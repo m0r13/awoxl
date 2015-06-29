@@ -1,5 +1,6 @@
 #include "awoxl_client.h"
 #include "awoxl_protocol.h"
+#include "awoxl_util.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -32,22 +33,6 @@ void parse_brightness_white(char** args, int args_count, int* value,
     else if (sscanf(arg, "%d", value) != 1) {
         exit(invalid_command());
     }
-}
-
-void parse_rgb(char** args, int args_count,
-        unsigned char* r, unsigned char* g, unsigned char* b) {
-    const char* arg = args_count >= 1 ? args[0] : "";
-    int rr, gg, bb;
-    if (strcmp(arg, "random") == 0) {
-        rr = rand() % 255;
-        gg = rand() % 255;
-        bb = rand() % 255;
-    } else if (sscanf(arg, "%d,%d,%d", &rr, &gg, &bb) != 3) {
-        exit(invalid_command());
-    }
-    *r = rr;
-    *g = gg;
-    *b = bb;
 }
 
 int main(int argc, char** argv) {
@@ -114,7 +99,8 @@ int main(int argc, char** argv) {
             return invalid_command();
     } else if (strcmp(command, "rgb") == 0) {
         c = 5;
-        parse_rgb(arguments, arguments_count, &r, &g, &b);
+        if (parse_rgb(arguments, arguments_count, &r, &g, &b) != 0)
+            return invalid_command();
     } else {
         return invalid_command();
     }
