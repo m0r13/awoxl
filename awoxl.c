@@ -9,39 +9,41 @@
 #include <unistd.h>
 
 static const char* COMMAND_USAGE =
-    "Allowed commands: \n"
+    "\nAllowed commands: \n"
     "- on\n"
     "- off\n"
     "- brightness (increase|decrease|2-11)\n"
     "- white (increase|decrease|2-11)\n"
     "- rgb (random|(0-255),(0-255),(0-255))\n";
 
+int invalid_command() {
+    fprintf(stderr, "Error: Invalid command usage!\n");
+    fprintf(stderr, COMMAND_USAGE);
+    return 1;
+}
+
 void parse_brightness_white(char** args, int args_count, int* value,
         int increase, int decrease) {
-    char* arg = args_count >= 1 ? args[0] : "";
+    const char* arg = args_count >= 1 ? args[0] : "";
     if (strcmp(arg, "increase") == 0)
         *value = increase;
     else if (strcmp(arg, "decrease") == 0)
         *value = decrease;
     else if (sscanf(arg, "%d", value) != 1) {
-        fprintf(stderr, "Error: Invalid command usage!\n");
-        fprintf(stderr, COMMAND_USAGE);
-        exit(1);
+        exit(invalid_command());
     }
 }
 
 void parse_rgb(char** args, int args_count,
         unsigned char* r, unsigned char* g, unsigned char* b) {
-    char* arg = args_count >= 1 ? args[0] : "";
+    const char* arg = args_count >= 1 ? args[0] : "";
     int rr, gg, bb;
     if (strcmp(arg, "random") == 0) {
         rr = rand() % 255;
         gg = rand() % 255;
         bb = rand() % 255;
     } else if (sscanf(arg, "%d,%d,%d", &rr, &gg, &bb) != 3) {
-        fprintf(stderr, "Error: Invalid command usage!\n");
-        fprintf(stderr, COMMAND_USAGE);
-        exit(1);
+        exit(invalid_command());
     }
     *r = rr;
     *g = gg;
@@ -102,27 +104,19 @@ int main(int argc, char** argv) {
         c = 3;
         parse_brightness_white(arguments, arguments_count, &value,
                 AWOXL_BRIGHTNESS_INCREASE, AWOXL_BRIGHTNESS_DECREASE);
-        if (value < 0 || value > 11) {
-            fprintf(stderr, "Error: Invalid command usage!\n");
-            fprintf(stderr, COMMAND_USAGE);
-            exit(1);
-        }
+        if (value < 0 || value > 11)
+            return invalid_command();
     } else if (strcmp(command, "white") == 0) {
         c = 4;
         parse_brightness_white(arguments, arguments_count, &value,
                 AWOXL_TEMPERATURE_INCREASE, AWOXL_TEMPERATURE_DECREASE);
-        if (value < 0 || value > 11) {
-            fprintf(stderr, "Error: Invalid command usage!\n");
-            fprintf(stderr, COMMAND_USAGE);
-            exit(1);
-        }
+        if (value < 0 || value > 11)
+            return invalid_command();
     } else if (strcmp(command, "rgb") == 0) {
         c = 5;
         parse_rgb(arguments, arguments_count, &r, &g, &b);
     } else {
-        fprintf(stderr, "Error: Invalid command '%s'!\n", command);
-        fprintf(stderr, COMMAND_USAGE);
-        return 1;
+        return invalid_command();
     }
 
     int sock = awoxl_connect(dst);
