@@ -1,5 +1,6 @@
 OBJECTS = awoxl_client.o awoxl_protocol.o awoxl_util.o
 CFLAGS = -g
+LDFLAGS=-lm
 
 all: awoxl fun/test
 awoxl: awoxl.o ${OBJECTS}

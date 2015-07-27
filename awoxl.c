@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 #include <unistd.h>
 
 static const char* COMMAND_USAGE =
@@ -36,7 +35,7 @@ void parse_brightness_white(char** args, int args_count, int* value,
 }
 
 int main(int argc, char** argv) {
-    srand(time(NULL));
+    srand_milliseconds();
 
     char* mac = NULL;
     char* command = NULL;

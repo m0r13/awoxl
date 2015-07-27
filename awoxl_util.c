@@ -1,8 +1,11 @@
 #include "awoxl_util.h"
 
+#include <inttypes.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 int parse_mac(const char* macstr, bdaddr_t* mac) {
     unsigned int m[6];
@@ -54,5 +57,18 @@ int read_default_mac(bdaddr_t* mac) {
     }
     fclose(f);
     return parse_mac(buf, mac);
+}
+
+// http://stackoverflow.com/questions/3756323/getting-the-current-time-in-milliseconds
+void srand_milliseconds() {
+    long milliseconds;
+    time_t time;
+    struct timespec spec;
+    
+    clock_gettime(CLOCK_REALTIME, &spec);
+    time = spec.tv_sec;
+    milliseconds = round(spec.tv_nsec / 1.0e6);
+
+    srand(milliseconds);
 }
 

@@ -9,5 +9,7 @@ int parse_rgb(char** args, int args_count,
 
 int read_default_mac(bdaddr_t* mac);
 
+void srand_milliseconds();
+
 #endif
 
