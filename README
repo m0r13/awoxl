@@ -1,0 +1,11 @@
+On Linux:
+
+Debian based
+sudo apt-get install libbluetooth-dev
+
+will fix issue
+
+cc -g   -c -o awoxl.o awoxl.c
+In file included from awoxl.c:1:0:
+awoxl_client.h:4:48: fatal error: bluetooth/bluetooth.h: No such file or directory
+ #include <bluetooth/bluetooth.h> /* bdaddr_t */
